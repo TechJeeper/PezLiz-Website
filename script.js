@@ -9,11 +9,37 @@ if (document.getElementById('twitch-embed')) {
         height: "100%", // Controlled by CSS
         channel: twitchChannel,
         layout: "video",
-        autoplay: false,
-        // Add parent domains for embedding constraints
-        parent: ["localhost", "127.0.0.1", "pezliz.github.io", "github.io"]
+        autoplay: false
     });
 }
+
+// Mock YouTube Data
+const youtubeVideos = [
+    {
+        title: "3D Printing a Giant Robot!",
+        thumbnail: "https://placehold.co/600x400/fa00fa/ffffff?text=Giant+Robot", // Placeholder image
+        link: "https://www.youtube.com/watch?v=placeholder1",
+        date: "2 days ago"
+    },
+    {
+        title: "PezLiz Live: Modeling Tutorial",
+        thumbnail: "https://placehold.co/600x400/0000f8/ffffff?text=Modeling+Tutorial",
+        link: "https://www.youtube.com/watch?v=placeholder2",
+        date: "5 days ago"
+    },
+    {
+        title: "Reviewing the New Bambu Lab X1",
+        thumbnail: "https://placehold.co/600x400/00002a/ffffff?text=Printer+Review",
+        link: "https://www.youtube.com/watch?v=placeholder3",
+        date: "1 week ago"
+    },
+    {
+        title: "Painting 3D Prints Like a Pro",
+        thumbnail: "https://placehold.co/600x400/ffd700/000000?text=Painting+Guide",
+        link: "https://www.youtube.com/watch?v=placeholder4",
+        date: "2 weeks ago"
+    }
+];
 
 // Mock Discord Events (Schedule)
 const discordEvents = [
@@ -37,106 +63,23 @@ const discordEvents = [
     }
 ];
 
-// Fetch and Render YouTube Videos
+// Render YouTube Videos
 const videoContainer = document.getElementById('youtube-feed');
-const CHANNEL_ID = 'UCI3g9525SNP2r8wedjgMoZg';
-const RSS_URL = `https://www.youtube.com/feeds/videos.xml?channel_id=${CHANNEL_ID}`;
-// Using allorigins.win as a CORS proxy to fetch the XML feed
-const API_URL = `https://api.allorigins.win/get?url=${encodeURIComponent(RSS_URL)}`;
-
 if (videoContainer) {
-    // Show loading state
-    videoContainer.innerHTML = '<p style="color:white; text-align:center; grid-column: 1/-1;">Loading videos...</p>';
-
-    fetch(API_URL)
-        .then(response => {
-            if (!response.ok) throw new Error('Network response was not ok');
-            return response.json();
-        })
-        .then(data => {
-            if (!data.contents) throw new Error('No content found');
-
-            // Parse XML content
-            const parser = new DOMParser();
-            const xmlDoc = parser.parseFromString(data.contents, "text/xml");
-            const entries = xmlDoc.querySelectorAll('entry');
-
-            // Clear loading state
-            videoContainer.innerHTML = '';
-
-            if (entries.length === 0) {
-                 videoContainer.innerHTML = '<p style="color:white; text-align:center; grid-column: 1/-1;">No videos found.</p>';
-                 return;
-            }
-
-            // Limit to most recent 8 videos
-            const recentEntries = Array.from(entries).slice(0, 8);
-
-            recentEntries.forEach(entry => {
-                const title = entry.querySelector('title').textContent;
-                const link = entry.querySelector('link').getAttribute('href');
-                const published = new Date(entry.querySelector('published').textContent).toLocaleDateString();
-
-                // YouTube RSS feed uses media:group/media:thumbnail
-                // Use namespace-aware selection for robustness
-                const mediaNamespace = 'http://search.yahoo.com/mrss/';
-                let mediaGroup = entry.getElementsByTagNameNS(mediaNamespace, 'group')[0];
-
-                // Fallback for browsers/parsers that might not handle NS correctly or flat parse
-                if (!mediaGroup) {
-                    mediaGroup = entry.getElementsByTagName('media:group')[0];
-                }
-
-                let thumbnail = '';
-                if (mediaGroup) {
-                    let thumbNode = mediaGroup.getElementsByTagNameNS(mediaNamespace, 'thumbnail')[0];
-                    if (!thumbNode) {
-                         thumbNode = mediaGroup.getElementsByTagName('media:thumbnail')[0];
-                    }
-                    if (thumbNode) thumbnail = thumbNode.getAttribute('url');
-                }
-
-                const card = document.createElement('div');
-                card.className = 'video-card';
-
-                const anchor = document.createElement('a');
-                anchor.href = link;
-                anchor.target = "_blank";
-
-                const img = document.createElement('img');
-                img.src = thumbnail;
-                img.alt = title;
-                img.className = 'video-thumbnail';
-
-                const infoDiv = document.createElement('div');
-                infoDiv.className = 'video-info';
-
-                const h3 = document.createElement('h3');
-                h3.textContent = title;
-
-                const p = document.createElement('p');
-                p.textContent = published;
-
-                infoDiv.appendChild(h3);
-                infoDiv.appendChild(p);
-                anchor.appendChild(img);
-                anchor.appendChild(infoDiv);
-                card.appendChild(anchor);
-
-                videoContainer.appendChild(card);
-            });
-        })
-        .catch(error => {
-            console.error('Error fetching YouTube feed:', error);
-            videoContainer.innerHTML = `
-                <div style="grid-column: 1/-1; text-align: center;">
-                    <p style="color: white; margin-bottom: 10px;">Failed to load videos.</p>
-                    <a href="https://www.youtube.com/channel/${CHANNEL_ID}" target="_blank" class="social-btn youtube" style="display: inline-block;">
-                        Visit Channel
-                    </a>
+    youtubeVideos.forEach(video => {
+        const card = document.createElement('div');
+        card.className = 'video-card';
+        card.innerHTML = `
+            <a href="${video.link}" target="_blank">
+                <img src="${video.thumbnail}" alt="${video.title}" class="video-thumbnail">
+                <div class="video-info">
+                    <h3>${video.title}</h3>
+                    <p>${video.date}</p>
                 </div>
-            `;
-        });
+            </a>
+        `;
+        videoContainer.appendChild(card);
+    });
 }
 
 // Render Schedule
@@ -153,3 +96,14 @@ if (scheduleContainer) {
         scheduleContainer.appendChild(card);
     });
 }
+
+/*
+   Note: To fetch real YouTube data without an API key, you can use an RSS to JSON converter.
+   Example using rss2json.com:
+
+   fetch('https://api.rss2json.com/v1/api.json?rss_url=https://www.youtube.com/feeds/videos.xml?channel_id=YOUR_CHANNEL_ID')
+     .then(response => response.json())
+     .then(data => {
+        // Map data.items to your video structure and render
+     });
+*/

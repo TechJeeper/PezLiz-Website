@@ -1,1 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PezLiz - Creator & 3D Printing Enthusiast</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <div class="container header-container">
+            <div class="logo">
+                <img src="assets/pezliz.png" alt="PezLiz Logo">
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#hero">Home</a></li>
+                    <li><a href="#twitch">Live</a></li>
+                    <li><a href="#youtube">Videos</a></li>
+                    <li><a href="#schedule">Schedule</a></li>
+                    <li><a href="#affiliates">Affiliates</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
 
+    <main>
+        <section id="hero">
+            <div class="container hero-content">
+                <h1>Welcome to PezLiz's Universe</h1>
+                <p class="bio">PezLiz is a creative content creator and 3D printing enthusiast. Catch her live on Twitch sharing her latest projects, or watch her tutorials and showcases on YouTube. Explore her 3D models on Thangs and MakerWorld.</p>
+                <div class="social-links">
+                    <a href="https://www.twitch.tv/pezliz" target="_blank" class="social-btn twitch"><i class="fab fa-twitch"></i> Twitch</a>
+                    <a href="https://www.youtube.com/@pezliz" target="_blank" class="social-btn youtube"><i class="fab fa-youtube"></i> YouTube</a>
+                    <a href="https://thangs.com/designer/pezliz" target="_blank" class="social-btn thangs"><i class="fas fa-cube"></i> Thangs</a>
+                    <a href="https://makerworld.com/en/u/pezliz" target="_blank" class="social-btn makerworld"><i class="fas fa-print"></i> MakerWorld</a>
+                </div>
+            </div>
+        </section>
+
+        <section id="twitch">
+            <div class="container">
+                <h2><i class="fab fa-twitch"></i> Live Stream</h2>
+                <div id="twitch-embed"></div>
+            </div>
+        </section>
+
+        <section id="youtube">
+            <div class="container">
+                <h2><i class="fab fa-youtube"></i> Latest Videos</h2>
+                <div id="youtube-feed" class="video-grid">
+                    <!-- Videos will be injected here by JS -->
+                </div>
+            </div>
+        </section>
+
+        <section id="schedule">
+            <div class="container">
+                <h2><i class="far fa-calendar-alt"></i> Upcoming Streams</h2>
+                <div id="schedule-list" class="schedule-grid">
+                    <!-- Events will be injected here by JS -->
+                </div>
+            </div>
+        </section>
+
+        <section id="affiliates">
+            <div class="container">
+                <h2>Support the Channel</h2>
+                <p>Check out these affiliate links for 3D printing supplies and more!</p>
+                <div class="affiliate-links">
+                    <a href="#" class="affiliate-card">
+                        <h3>Filament Brand X</h3>
+                        <p>Best PLA for your prints. Use code PEZLIZ for 10% off.</p>
+                    </a>
+                    <a href="#" class="affiliate-card">
+                        <h3>3D Printer Store</h3>
+                        <p>Get the latest printers here.</p>
+                    </a>
+                    <a href="#" class="affiliate-card">
+                        <h3>Tools & Gear</h3>
+                        <p>My recommended tools for post-processing.</p>
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 PezLiz. All rights reserved.</p>
+            <div class="footer-socials">
+                <a href="https://www.twitch.tv/pezliz"><i class="fab fa-twitch"></i></a>
+                <a href="https://www.youtube.com/@pezliz"><i class="fab fa-youtube"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://embed.twitch.tv/embed/v1.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

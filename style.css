@@ -286,6 +286,16 @@ section h2 {
     box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
 }
 
+.social-btn img.social-btn-icon {
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+}
+
+.social-btn.printables img.social-btn-icon {
+    filter: brightness(0) invert(1);
+}
+
 .social-btn.twitch { background-color: #9146FF; }
 .social-btn.youtube { background-color: #FF0000; }
 .social-btn.printables { background-color: #E85D04; } /* Printables orange */

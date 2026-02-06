@@ -90,21 +90,40 @@ function formatScheduleRange(startTime, endTime) {
 }
 
 const scheduleContainer = document.getElementById('schedule-list');
-const SCHEDULE_API = '/api/schedule';
 const TWITCH_SCHEDULE_URL = 'https://www.twitch.tv/pezliz/schedule';
+const TWITCH_GQL_URL = 'https://gql.twitch.tv/gql';
+const TWITCH_PUBLIC_CLIENT_ID = 'kimne78kx3ncx6brgo4mv6wki5h1ko';
+const SCHEDULE_QUERY = 'query ChannelSchedule($login: String!) { user(login: $login) { login channel { schedule { segments { startAt title game { displayName } } } } } }';
 
 if (scheduleContainer) {
     scheduleContainer.innerHTML = '<p class="loading">Loading schedule…</p>';
-    fetch(SCHEDULE_API)
+    fetch(TWITCH_GQL_URL, {
+        method: 'POST',
+        headers: {
+            'Client-Id': TWITCH_PUBLIC_CLIENT_ID,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            query: SCHEDULE_QUERY,
+            variables: { login: 'pezliz' }
+        })
+    })
         .then(res => {
-            if (!res.ok) throw new Error(res.status === 503 ? 'not_configured' : `HTTP ${res.status}`);
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
             return res.json();
         })
-        .then(data => {
+        .then(gql => {
             scheduleContainer.innerHTML = '';
-            const raw = data.segments || [];
+            const segmentsData = gql?.data?.user?.channel?.schedule?.segments || [];
             const now = new Date();
-            const segments = raw.filter(seg => !seg.canceled_until && new Date(seg.end_time || seg.start_time) > now);
+            const segments = segmentsData
+                .filter(seg => new Date(seg.startAt) > now)
+                .map(seg => ({
+                    start_time: seg.startAt,
+                    end_time: null,
+                    title: seg.title || 'Stream',
+                    category: seg.game ? { name: seg.game.displayName } : null
+                }));
             if (segments.length === 0) {
                 scheduleContainer.innerHTML = `
                     <p class="loading">No upcoming streams scheduled.</p>

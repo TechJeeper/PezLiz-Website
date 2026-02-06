@@ -152,6 +152,13 @@ section h2 {
     padding: 100px 0;
 }
 
+.hero-logo {
+    display: block;
+    height: 100px;
+    margin: 0 auto 24px;
+    filter: drop-shadow(0 0 8px var(--color-pink));
+}
+
 .hero-content h1 {
     font-size: 3rem;
     color: var(--color-pink);

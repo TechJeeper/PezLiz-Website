@@ -63,9 +63,20 @@
                 <h2><i class="fas fa-tshirt"></i> Merch</h2>
                 <p class="merch-intro">Rep your favourite creator! Official PezLiz merch from the Fourthwall shop.</p>
                 <div class="merch-carousel-wrap">
-                    <div id="merch-carousel" class="merch-carousel merch-carousel--loading" aria-label="Featured merch">
-                        <p class="loading merch-loading">Loading merch…</p>
+                    <div class="merch-carousel-viewport">
+                        <div id="merch-carousel" class="merch-carousel merch-carousel--loading" aria-label="Featured merch">
+                            <p class="loading merch-loading">Loading merch…</p>
+                        </div>
                     </div>
+                    <div class="merch-carousel-nav" aria-hidden="true">
+                        <button type="button" class="merch-carousel-btn merch-carousel-prev" aria-label="Previous">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <button type="button" class="merch-carousel-btn merch-carousel-next" aria-label="Next">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                    <div class="merch-carousel-dots" id="merch-dots" aria-label="Carousel pages"></div>
                 </div>
                 <p class="merch-cta"><a href="https://pezliz-shop.fourthwall.com/" target="_blank" rel="noopener" class="merch-link">View full shop →</a></p>
                 <a href="https://pezliz-shop.fourthwall.com/" target="_blank" rel="noopener" class="merch-embed-cta">

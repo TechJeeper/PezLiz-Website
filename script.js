@@ -66,14 +66,23 @@ if (videoContainer) {
         });
 }
 
-// Merch carousel: fetch random products from Fourthwall collections JSON feed
+// Merch carousel: fetch random products and fade/slide carousel with prev/next
 (function () {
     const MERCH_BASE = 'https://pezliz-shop.fourthwall.com';
     const MERCH_JSON = MERCH_BASE + '/collections/all.json';
     const CAROUSEL_SIZE = 8;
+    const GAP = 20;
 
+    const viewport = document.querySelector('.merch-carousel-viewport');
     const carousel = document.getElementById('merch-carousel');
-    if (!carousel) return;
+    const prevBtn = document.querySelector('.merch-carousel-prev');
+    const nextBtn = document.querySelector('.merch-carousel-next');
+    const dotsEl = document.getElementById('merch-dots');
+
+    if (!carousel || !viewport) return;
+
+    let currentPage = 0;
+    let maxPage = 0;
 
     function decodeTitle(s) {
         if (!s) return '';
@@ -87,6 +96,47 @@ if (videoContainer) {
             [a[i], a[j]] = [a[j], a[i]];
         }
         return a;
+    }
+
+    function updateCarouselPosition() {
+        const cards = carousel.querySelectorAll('.merch-card');
+        if (cards.length === 0) return;
+        const vw = viewport.getBoundingClientRect().width;
+        const cardWidth = cards[0].getBoundingClientRect().width;
+        const step = cardWidth + GAP;
+        const visibleCount = Math.max(1, Math.floor((vw + GAP) / step));
+        maxPage = Math.max(0, Math.ceil(cards.length / visibleCount) - 1);
+        currentPage = Math.min(currentPage, maxPage);
+        const offset = -currentPage * visibleCount * step;
+        carousel.style.transform = 'translate3d(' + offset + 'px, 0, 0)';
+        if (prevBtn) prevBtn.style.visibility = maxPage <= 0 ? 'hidden' : 'visible';
+        if (nextBtn) nextBtn.style.visibility = maxPage <= 0 ? 'hidden' : 'visible';
+        if (dotsEl) dotsEl.style.display = maxPage <= 0 ? 'none' : 'flex';
+        updateDots();
+    }
+
+    function updateDots() {
+        if (!dotsEl || maxPage <= 0) return;
+        dotsEl.innerHTML = '';
+        for (let i = 0; i <= maxPage; i++) {
+            const dot = document.createElement('button');
+            dot.type = 'button';
+            dot.className = 'merch-carousel-dot' + (i === currentPage ? ' active' : '');
+            dot.setAttribute('aria-label', 'Page ' + (i + 1));
+            dot.addEventListener('click', function () { goToPage(i); });
+            dotsEl.appendChild(dot);
+        }
+    }
+
+    function goToPage(page) {
+        currentPage = Math.max(0, Math.min(page, maxPage));
+        updateCarouselPosition();
+    }
+
+    function initCarouselControls() {
+        if (prevBtn) prevBtn.addEventListener('click', function () { goToPage(currentPage - 1); });
+        if (nextBtn) nextBtn.addEventListener('click', function () { goToPage(currentPage + 1); });
+        window.addEventListener('resize', function () { updateCarouselPosition(); });
     }
 
     fetch(MERCH_JSON)
@@ -119,6 +169,9 @@ if (videoContainer) {
                     (price ? '<span class="merch-card-price">' + price.replace(/</g, '&lt;') + '</span>' : '');
                 carousel.appendChild(card);
             });
+
+            initCarouselControls();
+            requestAnimationFrame(function () { updateCarouselPosition(); });
         })
         .catch(function () {
             carousel.innerHTML = '<p class="loading">Could not load merch. <a href="' + MERCH_BASE + '/collections/all" target="_blank" rel="noopener" class="merch-link">View shop</a></p>';

@@ -399,35 +399,110 @@ section h2 {
 
 .merch-carousel-wrap {
     margin-bottom: 1.5rem;
+    position: relative;
+}
+
+.merch-carousel-viewport {
     overflow: hidden;
+    position: relative;
+    margin: 0 48px;
+    min-height: 280px;
+}
+
+.merch-carousel-viewport::before,
+.merch-carousel-viewport::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 60px;
+    z-index: 1;
+    pointer-events: none;
+}
+
+.merch-carousel-viewport::before {
+    left: 0;
+    background: linear-gradient(to right, var(--color-black) 0%, transparent 100%);
+}
+
+.merch-carousel-viewport::after {
+    right: 0;
+    background: linear-gradient(to left, var(--color-black) 0%, transparent 100%);
 }
 
 .merch-carousel {
     display: flex;
     gap: 20px;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    scrollbar-width: thin;
     padding: 10px 0 16px;
-    -webkit-overflow-scrolling: touch;
-}
-
-.merch-carousel::-webkit-scrollbar {
-    height: 8px;
-}
-
-.merch-carousel::-webkit-scrollbar-track {
-    background: #222;
-    border-radius: 4px;
-}
-
-.merch-carousel::-webkit-scrollbar-thumb {
-    background: var(--color-pink);
-    border-radius: 4px;
+    transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    will-change: transform;
 }
 
 .merch-carousel--loading .merch-loading {
     margin: 0;
+}
+
+.merch-carousel-nav {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    transform: translateY(-50%);
+    pointer-events: none;
+    z-index: 2;
+}
+
+.merch-carousel-btn {
+    position: absolute;
+    pointer-events: auto;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 2px solid var(--color-pink);
+    background: rgba(0, 0, 0, 0.7);
+    color: var(--color-pink);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+}
+
+.merch-carousel-btn:hover {
+    background: var(--color-pink);
+    color: var(--color-black);
+    box-shadow: 0 0 12px var(--color-pink);
+}
+
+.merch-carousel-prev { left: 0; }
+.merch-carousel-next { right: 0; }
+
+.merch-carousel-dots {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 16px;
+    flex-wrap: wrap;
+}
+
+.merch-carousel-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    border: 1px solid var(--color-pink);
+    background: transparent;
+    cursor: pointer;
+    padding: 0;
+    transition: background 0.2s, box-shadow 0.2s;
+}
+
+.merch-carousel-dot:hover {
+    background: rgba(250, 0, 250, 0.4);
+}
+
+.merch-carousel-dot.active {
+    background: var(--color-pink);
+    box-shadow: 0 0 8px var(--color-pink);
 }
 
 .merch-card {
@@ -532,6 +607,13 @@ section h2 {
 }
 
 @media (max-width: 768px) {
+    .merch-carousel-viewport {
+        margin: 0 40px;
+    }
+    .merch-carousel-btn {
+        width: 38px;
+        height: 38px;
+    }
     .merch-card {
         flex: 0 0 180px;
     }

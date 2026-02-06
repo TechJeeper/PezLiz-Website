@@ -66,6 +66,18 @@ if (videoContainer) {
         });
 }
 
+// Merch carousel: shuffle order on load for random featured items
+(function () {
+    const carousel = document.getElementById('merch-carousel');
+    if (!carousel) return;
+    const items = Array.from(carousel.querySelectorAll('[data-merch-item]'));
+    for (let i = items.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [items[i], items[j]] = [items[j], items[i]];
+    }
+    items.forEach(function (node) { carousel.appendChild(node); });
+})();
+
 // Cursor/touch-reactive purple fog
 (function () {
     const fogEl = document.querySelector('.cursor-fog');

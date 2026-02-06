@@ -1,0 +1,302 @@
+:root {
+    --color-pink: #fa00fa;
+    --color-blue: #0000f8;
+    --color-black: #000000;
+    --color-dark-blue: #00002a;
+    --color-accent: #ffd700;
+    --color-text: #ffffff;
+    --color-text-secondary: #cccccc;
+    --font-heading: 'Orbitron', sans-serif;
+    --font-body: 'Roboto', sans-serif;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--color-black);
+    color: var(--color-text);
+    font-family: var(--font-body);
+    line-height: 1.6;
+}
+
+h1, h2, h3 {
+    font-family: var(--font-heading);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 1rem;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+    transition: color 0.3s;
+}
+
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Header */
+header {
+    background-color: rgba(0, 0, 42, 0.9);
+    border-bottom: 2px solid var(--color-pink);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    padding: 10px 0;
+}
+
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo img {
+    height: 60px;
+    /* Adding a subtle glow filter to match the neon vibe */
+    filter: drop-shadow(0 0 5px var(--color-pink));
+}
+
+nav ul {
+    display: flex;
+    list-style: none;
+    gap: 20px;
+}
+
+nav a {
+    font-weight: bold;
+    font-family: var(--font-heading);
+    color: var(--color-text);
+    padding: 5px 10px;
+    border: 1px solid transparent;
+}
+
+nav a:hover {
+    color: var(--color-accent);
+    border: 1px solid var(--color-pink);
+    box-shadow: 0 0 10px var(--color-pink);
+}
+
+/* Main Layout */
+section {
+    padding: 60px 0;
+    border-bottom: 1px solid #333;
+}
+
+section h2 {
+    color: var(--color-accent);
+    text-shadow: 0 0 5px var(--color-blue);
+    text-align: center;
+    font-size: 2.5rem;
+    margin-bottom: 40px;
+}
+
+/* Hero Section */
+#hero {
+    background: linear-gradient(135deg, var(--color-dark-blue), var(--color-black));
+    text-align: center;
+    padding: 100px 0;
+}
+
+.hero-content h1 {
+    font-size: 3rem;
+    color: var(--color-pink);
+    text-shadow: 0 0 10px var(--color-blue);
+    margin-bottom: 20px;
+}
+
+.bio {
+    max-width: 800px;
+    margin: 0 auto 40px;
+    font-size: 1.2rem;
+    color: var(--color-text-secondary);
+}
+
+/* Social Links */
+.social-links {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.social-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 15px 30px;
+    border-radius: 5px;
+    font-weight: bold;
+    font-family: var(--font-heading);
+    color: white;
+    font-size: 1.1rem;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.social-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+}
+
+.social-btn.twitch { background-color: #9146FF; }
+.social-btn.youtube { background-color: #FF0000; }
+.social-btn.thangs { background-color: #2D65FF; } /* Approximated Thangs Blue */
+.social-btn.makerworld { background-color: #00AE42; } /* Approximated MakerWorld Green */
+
+/* Twitch Section */
+#twitch-embed {
+    width: 100%;
+    height: 480px; /* Default height */
+    max-width: 854px; /* 480p 16:9 is 854x480, let's target roughly that or larger */
+    margin: 0 auto;
+    border: 2px solid var(--color-blue);
+    box-shadow: 0 0 20px var(--color-blue);
+}
+
+/* YouTube Feed */
+.video-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.video-card {
+    background-color: var(--color-dark-blue);
+    border: 1px solid var(--color-blue);
+    border-radius: 8px;
+    overflow: hidden;
+    transition: transform 0.3s;
+}
+
+.video-card:hover {
+    transform: scale(1.03);
+    border-color: var(--color-accent);
+}
+
+.video-thumbnail {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+}
+
+.video-info {
+    padding: 15px;
+}
+
+.video-info h3 {
+    font-size: 1rem;
+    color: var(--color-text);
+    margin-bottom: 5px;
+}
+
+.video-info p {
+    font-size: 0.8rem;
+    color: var(--color-text-secondary);
+}
+
+/* Schedule */
+.schedule-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+}
+
+.event-card {
+    background-color: #1a1a1a;
+    border-left: 5px solid var(--color-pink);
+    padding: 20px;
+    border-radius: 4px;
+}
+
+.event-date {
+    font-family: var(--font-heading);
+    color: var(--color-accent);
+    font-size: 1.2rem;
+    margin-bottom: 5px;
+}
+
+.event-title {
+    font-size: 1.1rem;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.event-description {
+    font-size: 0.9rem;
+    color: var(--color-text-secondary);
+}
+
+/* Affiliates */
+.affiliate-links {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.affiliate-card {
+    background: linear-gradient(45deg, var(--color-dark-blue), #111);
+    padding: 20px;
+    border: 1px solid #333;
+    border-radius: 8px;
+    width: 300px;
+    text-align: center;
+    display: block;
+}
+
+.affiliate-card:hover {
+    border-color: var(--color-accent);
+    box-shadow: 0 0 10px var(--color-accent);
+}
+
+.affiliate-card h3 {
+    color: var(--color-pink);
+}
+
+/* Footer */
+footer {
+    background-color: var(--color-dark-blue);
+    padding: 20px 0;
+    text-align: center;
+    border-top: 2px solid var(--color-blue);
+}
+
+.footer-socials {
+    margin-top: 10px;
+}
+
+.footer-socials a {
+    font-size: 1.5rem;
+    margin: 0 10px;
+    color: var(--color-text-secondary);
+}
+
+.footer-socials a:hover {
+    color: var(--color-accent);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .header-container {
+        flex-direction: column;
+    }
+
+    nav ul {
+        margin-top: 20px;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px;
+    }
+
+    #twitch-embed {
+        height: 300px;
+    }
+}

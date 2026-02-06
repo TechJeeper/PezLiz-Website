@@ -21,6 +21,52 @@ body {
     color: var(--color-text);
     font-family: var(--font-body);
     line-height: 1.6;
+    position: relative;
+    min-height: 100vh;
+}
+
+/* Background effect – soft animated orbs in theme colors */
+body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background:
+        radial-gradient(ellipse 70% 50% at 15% 30%, rgba(250, 0, 250, 0.12), transparent 55%),
+        radial-gradient(ellipse 60% 45% at 85% 70%, rgba(0, 0, 248, 0.1), transparent 55%),
+        radial-gradient(ellipse 50% 40% at 50% 85%, rgba(255, 215, 0, 0.05), transparent 50%),
+        radial-gradient(ellipse 40% 30% at 70% 20%, rgba(250, 0, 250, 0.06), transparent 50%);
+    animation: bg-float 25s ease-in-out infinite;
+    pointer-events: none;
+}
+
+@keyframes bg-float {
+    0%, 100% { transform: translate(0, 0) scale(1); opacity: 1; }
+    25% { transform: translate(1.5%, -0.8%) scale(1.02); opacity: 0.98; }
+    50% { transform: translate(-1%, 1.2%) scale(0.99); opacity: 1; }
+    75% { transform: translate(-0.5%, -0.5%) scale(1.01); opacity: 0.99; }
+}
+
+/* Cursor-reactive purple fog */
+.cursor-fog {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.cursor-fog::before {
+    content: '';
+    position: absolute;
+    width: 60vmax;
+    height: 60vmax;
+    left: var(--fog-x, 50%);
+    top: var(--fog-y, 50%);
+    transform: translate(-50%, -50%);
+    background: radial-gradient(circle, rgba(120, 60, 180, 0.1) 0%, rgba(100, 40, 160, 0.04) 45%, transparent 70%);
+    filter: blur(35px);
+    transition: left 0.35s ease-out, top 0.35s ease-out;
 }
 
 h1, h2, h3 {
@@ -260,6 +306,12 @@ section h2 {
     color: var(--color-accent);
 }
 
+#schedule-list .loading {
+    text-align: center;
+    color: var(--color-text-secondary);
+    padding: 1rem 0;
+}
+
 /* YouTube loading state */
 #youtube-feed .loading {
     text-align: center;
@@ -285,8 +337,13 @@ section h2 {
     border: 1px solid #333;
     border-radius: 8px;
     width: 300px;
+    min-height: 120px;
     text-align: center;
-    display: block;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    overflow: visible;
 }
 
 .affiliate-card:hover {
@@ -296,6 +353,22 @@ section h2 {
 
 .affiliate-card h3 {
     color: var(--color-pink);
+    margin-bottom: 0.5rem;
+    flex-shrink: 0;
+}
+
+.affiliate-card p {
+    margin: 0;
+    font-size: 0.95rem;
+    color: var(--color-text-secondary);
+    line-height: 1.5;
+    flex: 1;
+    min-height: 0;
+}
+
+.affiliate-card strong {
+    color: var(--color-accent);
+    font-weight: 700;
 }
 
 /* Footer */

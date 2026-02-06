@@ -66,18 +66,101 @@ if (videoContainer) {
         });
 }
 
-// Twitch schedule: embed from twitch.tv/pezliz/schedule
-const scheduleContainer = document.getElementById('schedule-list');
-if (scheduleContainer) {
-    const scheduleWrapper = document.createElement('div');
-    scheduleWrapper.className = 'schedule-embed-wrapper';
-    scheduleWrapper.innerHTML = `
-        <iframe
-            src="https://www.twitch.tv/pezliz/schedule"
-            title="PezLiz Twitch Schedule"
-            class="schedule-iframe"
-        ></iframe>
-        <a href="https://www.twitch.tv/pezliz/schedule" target="_blank" rel="noopener" class="schedule-link">View full schedule on Twitch</a>
-    `;
-    scheduleContainer.appendChild(scheduleWrapper);
+// Twitch schedule via Get Channel Stream Schedule API (serverless /api/schedule)
+function formatScheduleTime(rfc3339) {
+    if (!rfc3339) return '';
+    const d = new Date(rfc3339);
+    return d.toLocaleString(undefined, {
+        weekday: 'short',
+        month: 'short',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: '2-digit',
+        hour12: true
+    });
 }
+
+function formatScheduleRange(startTime, endTime) {
+    if (!startTime) return '';
+    const start = formatScheduleTime(startTime);
+    if (!endTime) return start;
+    const end = new Date(endTime);
+    const endStr = end.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit', hour12: true });
+    return `${start} – ${endStr}`;
+}
+
+const scheduleContainer = document.getElementById('schedule-list');
+const SCHEDULE_API = '/api/schedule';
+const TWITCH_SCHEDULE_URL = 'https://www.twitch.tv/pezliz/schedule';
+
+if (scheduleContainer) {
+    scheduleContainer.innerHTML = '<p class="loading">Loading schedule…</p>';
+    fetch(SCHEDULE_API)
+        .then(res => {
+            if (!res.ok) throw new Error(res.status === 503 ? 'not_configured' : `HTTP ${res.status}`);
+            return res.json();
+        })
+        .then(data => {
+            scheduleContainer.innerHTML = '';
+            const raw = data.segments || [];
+            const now = new Date();
+            const segments = raw.filter(seg => !seg.canceled_until && new Date(seg.end_time || seg.start_time) > now);
+            if (segments.length === 0) {
+                scheduleContainer.innerHTML = `
+                    <p class="loading">No upcoming streams scheduled.</p>
+                    <a href="${TWITCH_SCHEDULE_URL}" target="_blank" rel="noopener" class="schedule-link">View schedule on Twitch</a>
+                `;
+                return;
+            }
+            segments.forEach(seg => {
+                const card = document.createElement('div');
+                card.className = 'event-card';
+                const title = (seg.title || 'Stream').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                const timeStr = formatScheduleRange(seg.start_time, seg.end_time);
+                const category = seg.category ? (seg.category.name || '').replace(/</g, '&lt;').replace(/>/g, '&gt;') : '';
+                card.innerHTML = `
+                    <div class="event-date">${timeStr}</div>
+                    <h3 class="event-title">${title}</h3>
+                    ${category ? `<p class="event-description">${category}</p>` : ''}
+                `;
+                scheduleContainer.appendChild(card);
+            });
+            const link = document.createElement('a');
+            link.href = TWITCH_SCHEDULE_URL;
+            link.target = '_blank';
+            link.rel = 'noopener';
+            link.className = 'schedule-link';
+            link.textContent = 'View full schedule on Twitch';
+            scheduleContainer.appendChild(link);
+        })
+        .catch(() => {
+            scheduleContainer.innerHTML = `
+                <p class="loading">Schedule is available on Twitch.</p>
+                <a href="${TWITCH_SCHEDULE_URL}" target="_blank" rel="noopener" class="schedule-link">View full schedule on Twitch</a>
+            `;
+        });
+}
+
+// Cursor/touch-reactive purple fog
+(function () {
+    const fogEl = document.querySelector('.cursor-fog');
+    if (!fogEl) return;
+
+    function setFogPosition(x, y) {
+        fogEl.style.setProperty('--fog-x', x + 'px');
+        fogEl.style.setProperty('--fog-y', y + 'px');
+    }
+
+    function onMove(e) {
+        const x = e.touches ? e.touches[0].clientX : e.clientX;
+        const y = e.touches ? e.touches[0].clientY : e.clientY;
+        setFogPosition(x, y);
+    }
+
+    // Initialize to center until first move
+    setFogPosition(window.innerWidth / 2, window.innerHeight / 2);
+
+    document.addEventListener('mousemove', onMove);
+    document.addEventListener('touchstart', onMove, { passive: true });
+    document.addEventListener('touchmove', onMove, { passive: true });
+})();

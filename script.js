@@ -1,25 +1,3 @@
-// Affiliate vendor logos (Clearbit Logo API)
-(function () {
-    var cards = document.querySelectorAll('.affiliate-card[data-logo-domain]');
-    var CLEARBIT = 'https://logo.clearbit.com/';
-    for (var i = 0; i < cards.length; i++) {
-        (function (card) {
-            var domain = card.getAttribute('data-logo-domain');
-            var img = card.querySelector('.affiliate-logo');
-            var wrap = card.querySelector('.affiliate-logo-wrap');
-            if (!domain || !img) return;
-            img.onload = function () {
-                if (wrap) wrap.classList.add('affiliate-logo-wrap--loaded');
-            };
-            img.onerror = function () {
-                if (wrap) wrap.style.display = 'none';
-            };
-            img.src = CLEARBIT + domain;
-            if (img.complete && wrap) wrap.classList.add('affiliate-logo-wrap--loaded');
-        })(cards[i]);
-    }
-})();
-
 // Twitch Embed
 const twitchChannel = "pezliz"; // Placeholder channel name
 

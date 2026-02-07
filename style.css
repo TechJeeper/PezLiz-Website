@@ -311,6 +311,29 @@ section h2 {
     box-shadow: 0 0 20px var(--color-blue);
 }
 
+#twitch .twitch-follow-wrap {
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+#twitch .twitch-follow-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1.2rem;
+    background-color: #9146FF;
+    color: #fff !important;
+    text-decoration: none;
+    border-radius: 6px;
+    font-weight: 600;
+    transition: background-color 0.2s, transform 0.2s;
+}
+
+#twitch .twitch-follow-btn:hover {
+    background-color: #772ce8;
+    transform: scale(1.03);
+}
+
 /* YouTube Feed */
 .video-grid {
     display: grid;

@@ -475,7 +475,8 @@ section h2 {
     font-weight: 700;
 }
 
-#affiliates .affiliate-intro {
+#affiliates .affiliate-intro,
+#fundraising .fundraising-intro {
     max-width: 640px;
     margin: 0 auto 2rem;
     font-size: 1.1rem;

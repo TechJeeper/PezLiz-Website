@@ -50,7 +50,7 @@ if (videoContainer) {
                 const card = document.createElement('div');
                 card.className = 'video-card';
                 card.innerHTML = `
-                    <a href="${link}" target="_blank" rel="noopener">
+                    <a href="${link}" target="_blank" rel="noopener" data-goatcounter-click="link-youtube-video" data-goatcounter-title="YouTube video: ${title.replace(/"/g, '&quot;')}">
                         <img src="${thumbnail}" alt="${title.replace(/"/g, '&quot;')}" class="video-thumbnail" loading="lazy">
                         <div class="video-info">
                             <h3>${title.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</h3>
@@ -163,6 +163,8 @@ if (videoContainer) {
                 card.target = '_blank';
                 card.rel = 'noopener';
                 card.className = 'merch-card';
+                card.setAttribute('data-goatcounter-click', 'link-merch-product');
+                card.setAttribute('data-goatcounter-title', 'Merch: ' + title);
                 card.innerHTML =
                     '<img class="merch-card-img" src="' + (p.image || '').replace(/"/g, '&quot;') + '" alt="" loading="lazy">' +
                     '<span class="merch-card-title">' + title.replace(/</g, '&lt;').replace(/>/g, '&gt;') + '</span>' +
@@ -201,4 +203,49 @@ if (videoContainer) {
     document.addEventListener('mousemove', onMove);
     document.addEventListener('touchstart', onMove, { passive: true });
     document.addEventListener('touchmove', onMove, { passive: true });
+})();
+
+// GoatCounter click events (auto-bind is off so dynamic merch/YouTube links are included once).
+(function () {
+    function slug(text) {
+        return String(text || '')
+            .toLowerCase()
+            .replace(/[^a-z0-9]+/g, '-')
+            .replace(/^-+|-+$/g, '')
+            .slice(0, 80) || 'link';
+    }
+
+    function trackClick(path, title, everyClick) {
+        if (!window.goatcounter || typeof window.goatcounter.count !== 'function') return;
+        window.goatcounter.count({
+            path: path,
+            title: title,
+            event: true,
+            no_session: !!everyClick
+        });
+    }
+
+    document.addEventListener('click', function (e) {
+        var a = e.target.closest('a');
+        if (!a || !a.href) return;
+
+        var named = a.getAttribute('data-goatcounter-click');
+        if (named) {
+            var titled = a.getAttribute('data-goatcounter-title') || named;
+            var every = a.getAttribute('data-goatcounter-no-session') === '1';
+            trackClick(named, titled, every);
+            return;
+        }
+
+        var dest;
+        try {
+            dest = new URL(a.href, location.href);
+        } catch (err) {
+            return;
+        }
+        if (dest.origin === location.origin) return;
+
+        var label = (a.getAttribute('aria-label') || a.textContent || dest.hostname).replace(/\s+/g, ' ').trim();
+        trackClick('link-' + slug(label), 'Link: ' + label.slice(0, 200), false);
+    }, true);
 })();
